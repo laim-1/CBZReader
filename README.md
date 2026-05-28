@@ -1,18 +1,24 @@
 # CBZ Reader
 
-Read `.cbz` comic archives in the browser — paged or scroll mode, fullscreen, and magnifier.
+Read `.cbz` comic archives in the browser.
 
 **Live site:** [https://laim-1.github.io/CBZReader/](https://laim-1.github.io/CBZReader/)
 
-## GitHub Pages setup
+## GitHub Pages (required settings)
 
-1. Open **Settings → Pages** on this repo.
-2. Under **Build and deployment**, choose **Deploy from a branch**.
-3. Branch: **`main`**, folder: **`/docs`** (not root).
+In **Settings → Pages → Build and deployment**:
 
-The site files live in the [`docs/`](docs/) folder (built output). Root of `main` is source code only.
+| Setting | Value |
+|--------|--------|
+| Source | **Deploy from a branch** |
+| Branch | `main` |
+| Folder | **`/docs`** |
 
-> **Note:** After changing source code, the `docs/` folder must be rebuilt before pushing. If you add a GitHub Actions workflow later, it can do that automatically on each push.
+Use **`/docs`**, not **root (`/`)**. The root of the repo is source code; the built site is in [`docs/`](docs/).
+
+If Pages is set to root by mistake, you get an unstyled page. The root [`index.html`](index.html) only redirects to `docs/`.
+
+After changing settings or pushing, wait 1–2 minutes and hard-refresh (Ctrl+F5).
 
 ## Controls
 
@@ -24,4 +30,4 @@ The site files live in the [`docs/`](docs/) folder (built output). Root of `main
 | M | Magnifier |
 | Esc | Exit magnifier, then fullscreen |
 
-Drag and drop a `.cbz` file onto the page, or use **Open**.
+Drag and drop a `.cbz` file, or use **Open**.

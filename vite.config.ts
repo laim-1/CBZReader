@@ -1,12 +1,21 @@
+import { resolve } from "node:path";
 import { defineConfig } from "vite";
 
-// GitHub Pages project site: https://laim-1.github.io/CBZReader/
+// Relative paths so CSS/JS load on GitHub Pages from the /docs folder.
 export default defineConfig({
-  base: "/CBZReader/",
+  base: "./",
   root: ".",
   publicDir: "public",
   build: {
     outDir: "docs",
     emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        index: resolve(__dirname, "index.src.html"),
+      },
+    },
+  },
+  server: {
+    open: "/index.src.html",
   },
 });

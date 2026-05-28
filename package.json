@@ -4,8 +4,8 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "vite --open /index.src.html",
+    "build": "tsc && vite build && node scripts/finalize-docs.mjs",
     "preview": "vite preview"
   },
   "devDependencies": {
