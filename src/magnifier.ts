@@ -1,14 +1,3 @@
-export type MagnifierOptions = {
-  lensEl: HTMLElement;
-  zoom: number;
-  /** Lens radius in CSS pixels */
-  radius: number;
-};
-
-/**
- * Compute the content rectangle of an image with object-fit: contain
- * (letterboxed area inside the element).
- */
 export function getImageContentRect(img: HTMLImageElement): DOMRect | null {
   const nw = img.naturalWidth;
   const nh = img.naturalHeight;
@@ -57,47 +46,56 @@ export function clientToNatural(
   ) {
     return null;
   }
-
   const nx = ((clientX - rect.left) / rect.width) * img.naturalWidth;
   const ny = ((clientY - rect.top) / rect.height) * img.naturalHeight;
   return { nx, ny };
 }
 
-/**
- * Update lens position and background to magnify the image under (clientX, clientY).
- * Lens element should have pointer-events: none.
- */
-export function updateLens(
+function clamp(v: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, v));
+}
+
+/** Draw magnified region into a circular canvas lens. */
+export function drawLens(
+  canvas: HTMLCanvasElement,
   img: HTMLImageElement,
-  lensEl: HTMLElement,
   clientX: number,
   clientY: number,
   zoom: number,
   radius: number,
-): void {
-  const natural = clientToNatural(img, clientX, clientY);
-  if (!natural) {
-    lensEl.classList.add("hidden");
-    return;
-  }
+): boolean {
+  const content = getImageContentRect(img);
+  const point = clientToNatural(img, clientX, clientY);
+  if (!content || !point) return false;
 
-  const { nx, ny } = natural;
-  const nw = img.naturalWidth;
-  const nh = img.naturalHeight;
   const d = radius * 2;
+  const scaleX = img.naturalWidth / content.width;
+  const scaleY = img.naturalHeight / content.height;
+  const srcW = (d / zoom) * scaleX;
+  const srcH = (d / zoom) * scaleY;
+  const { nx, ny } = point;
+  const sx = clamp(nx - srcW / 2, 0, img.naturalWidth - srcW);
+  const sy = clamp(ny - srcH / 2, 0, img.naturalHeight - srcH);
 
-  lensEl.classList.remove("hidden");
-  lensEl.style.width = `${d}px`;
-  lensEl.style.height = `${d}px`;
-  lensEl.style.left = `${clientX - radius}px`;
-  lensEl.style.top = `${clientY - radius}px`;
+  canvas.width = d;
+  canvas.height = d;
+  canvas.style.width = `${d}px`;
+  canvas.style.height = `${d}px`;
+  canvas.style.left = `${clientX - radius}px`;
+  canvas.style.top = `${clientY - radius}px`;
 
-  const src = img.currentSrc || img.src;
-  lensEl.style.backgroundImage = `url("${src.replace(/"/g, '\\"')}")`;
-  lensEl.style.backgroundSize = `${nw * zoom}px ${nh * zoom}px`;
-  const px = radius - nx * zoom;
-  const py = radius - ny * zoom;
-  lensEl.style.backgroundPosition = `${px}px ${py}px`;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return false;
+
+  ctx.clearRect(0, 0, d, d);
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(radius, radius, radius, 0, Math.PI * 2);
+  ctx.clip();
+  ctx.drawImage(img, sx, sy, srcW, srcH, 0, 0, d, d);
+  ctx.restore();
+
+  return true;
 }
 
 export function pickImageUnderPoint(
@@ -105,10 +103,9 @@ export function pickImageUnderPoint(
   clientY: number,
   root: HTMLElement,
 ): HTMLImageElement | null {
-  const stack = document.elementsFromPoint(clientX, clientY);
-  for (const el of stack) {
+  for (const el of document.elementsFromPoint(clientX, clientY)) {
     if (!root.contains(el)) continue;
-    if (el instanceof HTMLImageElement) return el;
+    if (el instanceof HTMLImageElement && el.naturalWidth > 0) return el;
   }
   return null;
 }

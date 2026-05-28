@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>CBZ Reader</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" crossorigin src="/CBZReader/assets/index-QLT94amC.js"></script>
+    <link rel="stylesheet" crossorigin href="/CBZReader/assets/index-Ck0fCQog.css">
+  </head>
+  <body>
+    <div id="app" class="app">
+      <div id="chrome" class="chrome">
+        <header class="top-bar">
+          <div class="brand">
+            <span class="brand-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5" />
+                <path d="M7 8h10M7 12h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+            </span>
+            <span class="brand-name">CBZ Reader</span>
+          </div>
+
+          <div class="top-actions">
+            <label class="btn btn-primary open-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              Open
+              <input type="file" id="file-input" accept=".cbz,.zip,application/zip" hidden />
+            </label>
+
+            <div class="segmented" role="group" aria-label="Reading mode">
+              <button type="button" id="mode-paged" class="segmented-btn active" aria-pressed="true">Paged</button>
+              <button type="button" id="mode-scroll" class="segmented-btn" aria-pressed="false">Scroll</button>
+            </div>
+
+            <div class="segmented" role="group" aria-label="Fit">
+              <button type="button" id="fit-width" class="segmented-btn small active" aria-pressed="true">Width</button>
+              <button type="button" id="fit-height" class="segmented-btn small" aria-pressed="false">Height</button>
+            </div>
+
+            <button type="button" id="btn-magnifier" class="icon-btn" title="Magnifier (M)" aria-pressed="false">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="10" cy="10" r="6" stroke="currentColor" stroke-width="1.5" />
+                <path d="M15 15l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                <path d="M10 7v6M7 10h6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+              </svg>
+            </button>
+
+            <label class="zoom-control" id="zoom-control" hidden>
+              <span class="sr-only">Magnifier zoom</span>
+              <input type="range" id="magnifier-zoom" min="2" max="6" step="0.25" value="2.5" />
+            </label>
+
+            <button type="button" id="btn-fullscreen" class="icon-btn" title="Fullscreen (F)">
+              <svg class="icon-fs-enter" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M8 21H5a2 2 0 01-2-2v-3M16 21h3a2 2 0 002-2v-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+              <svg class="icon-fs-exit hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M9 3H5v4M15 3h4v4M9 21H5v-4M15 21h4v-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <footer class="bottom-bar" id="bottom-bar" hidden>
+          <div class="page-info">
+            <span id="file-label" class="file-label"></span>
+            <span id="page-status" class="page-status">—</span>
+          </div>
+          <div class="page-scrubber">
+            <button type="button" id="btn-first" class="icon-btn tiny" title="First page">⏮</button>
+            <input type="range" id="page-slider" min="1" max="1" value="1" />
+            <button type="button" id="btn-last" class="icon-btn tiny" title="Last page">⏭</button>
+          </div>
+          <div class="progress-track" aria-hidden="true">
+            <div id="progress-fill" class="progress-fill"></div>
+          </div>
+        </footer>
+      </div>
+
+      <main id="reader" class="reader">
+        <section id="welcome" class="welcome">
+          <div class="welcome-card">
+            <div class="welcome-icon" aria-hidden="true">
+              <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                <rect x="8" y="10" width="48" height="44" rx="4" stroke="currentColor" stroke-width="2" opacity="0.4" />
+                <rect x="14" y="16" width="36" height="28" rx="2" fill="currentColor" opacity="0.15" />
+                <path d="M20 24h24M20 32h16M20 40h20" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.5" />
+              </svg>
+            </div>
+            <h1>Drop a comic here</h1>
+            <p>or choose a <strong>.cbz</strong> file to start reading</p>
+            <label class="btn btn-primary btn-lg">
+              Choose file
+              <input type="file" id="file-input-welcome" accept=".cbz,.zip,application/zip" hidden />
+            </label>
+            <p class="welcome-hint">Arrow keys turn pages · F fullscreen · M magnifier</p>
+          </div>
+        </section>
+
+        <div id="loading" class="loading hidden" role="status" aria-live="polite">
+          <div class="spinner"></div>
+          <p id="loading-text">Loading…</p>
+          <div class="loading-bar"><div id="loading-fill" class="loading-fill"></div></div>
+        </div>
+
+        <div id="paged-view" class="paged-view hidden">
+          <button type="button" class="nav-zone nav-prev" id="nav-prev" aria-label="Previous page"></button>
+          <figure class="page-frame">
+            <img id="page-img" class="page-img" alt="" />
+          </figure>
+          <button type="button" class="nav-zone nav-next" id="nav-next" aria-label="Next page"></button>
+        </div>
+
+        <div id="scroll-view" class="scroll-view hidden" aria-label="All pages"></div>
+
+        <canvas id="magnifier-lens" class="magnifier-lens hidden" aria-hidden="true"></canvas>
+      </main>
+
+      <div id="toast" class="toast hidden" role="alert"></div>
+    </div>
+  </body>
+</html>
