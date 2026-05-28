@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CBZ Reader</title>
+  </head>
+  <body>
+    <div id="app" class="app">
+      <header class="toolbar">
+        <label class="btn file-label">
+          Open CBZ
+          <input type="file" id="file-input" accept=".cbz,application/zip" hidden />
+        </label>
+        <div class="toolbar-group" role="group" aria-label="Reading mode">
+          <button type="button" id="mode-paged" class="btn active" aria-pressed="true">Paged</button>
+          <button type="button" id="mode-scroll" class="btn" aria-pressed="false">Scroll</button>
+        </div>
+        <button type="button" id="btn-fullscreen" class="btn">Fullscreen</button>
+        <div class="toolbar-group magnifier-controls">
+          <button type="button" id="btn-magnifier" class="btn" aria-pressed="false">Magnifier</button>
+          <label class="slider-label">
+            Zoom
+            <input type="range" id="magnifier-zoom" min="2" max="6" step="0.25" value="3" />
+          </label>
+        </div>
+        <div class="toolbar-group fit-group">
+          <span class="toolbar-hint">Fit:</span>
+          <button type="button" id="fit-width" class="btn small active">Width</button>
+          <button type="button" id="fit-height" class="btn small">Height</button>
+        </div>
+      </header>
+
+      <main id="main-area" class="main-area">
+        <div id="paged-view" class="paged-view">
+          <img id="paged-image" class="paged-image" alt="Page" />
+        </div>
+        <div id="scroll-view" class="scroll-view hidden" aria-label="All pages"></div>
+        <div id="magnifier-lens" class="magnifier-lens hidden" aria-hidden="true"></div>
+        <p id="empty-hint" class="empty-hint">Open a .cbz file to start reading.</p>
+      </main>
+
+      <footer class="status-bar">
+        <span id="page-status">No file loaded</span>
+        <span class="kbd-hint">← → · F / Ctrl+Enter fullscreen · M magnifier · Esc</span>
+      </footer>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
